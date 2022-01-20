@@ -677,6 +677,9 @@ Compiler.prototype.getEffectiveFilters = function () {
     if (filters.binary && !this.compiler.supportsBinary) {
         delete filters.binary;
     }
+    if (filters.binaryobject && !this.compiler.supportsBinaryObject) {
+        delete filters.binaryobject;
+    }
     if (filters.execute && !this.compiler.supportsExecute) {
         delete filters.execute;
     }
@@ -1751,7 +1754,7 @@ Compiler.prototype.updateButtons = function () {
         button.prop('title', '[' + (button.hasClass('active') ? 'ON' : 'OFF') + '] ' + title +
             (button.prop('disabled') ? ' [LOCKED]' : ''));
     };
-    var isIntelFilterDisabled = !this.compiler.supportsIntel && (!filters.binary && !filters.binaryobject);
+    var isIntelFilterDisabled = !this.compiler.supportsIntel && !filters.binary && !filters.binaryobject;
     this.filterIntelButton.prop('disabled', isIntelFilterDisabled);
     formatFilterTitle(this.filterIntelButton, this.filterIntelTitle);
 
@@ -1759,10 +1762,10 @@ Compiler.prototype.updateButtons = function () {
     this.filterBinaryButton.prop('disabled', !this.compiler.supportsBinary || filters.binaryobject);
 
     // Disable binaryobject support on compilers that don't work with it or if binary is selected
-    this.filterBinaryObjectButton.prop('disabled', !this.compiler.supportsBinary || filters.binary);
+    this.filterBinaryObjectButton.prop('disabled', !this.compiler.supportsBinaryObject || filters.binary);
 
     formatFilterTitle(this.filterBinaryButton, this.filterBinaryTitle);
-    this.filterExecuteButton.prop('disabled', !this.compiler.supportsExecute || filters.binaryobject);
+    this.filterExecuteButton.prop('disabled', !this.compiler.supportsExecute);
 
     formatFilterTitle(this.filterExecuteButton, this.filterExecuteTitle);
     // Disable demangle for compilers where we can't access it
@@ -1816,6 +1819,8 @@ Compiler.prototype.updateButtons = function () {
     this.gnatDebugTreeButton.toggle(!!this.compiler.supportsGnatDebugViews);
     this.gnatDebugButton.toggle(!!this.compiler.supportsGnatDebugViews);
     this.executorButton.toggle(!!this.compiler.supportsExecute);
+    this.filterBinaryButton.toggle(!!this.compiler.supportsBinary);
+    this.filterBinaryObjectButton.toggle(!!this.compiler.supportsBinaryObject);
 
     this.enableToolButtons();
 };
